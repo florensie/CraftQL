@@ -44,7 +44,7 @@ type EffectInstance {
 
 - `experienceLevel` will be resolved to the field with the same name on `PlayerEntity`
 - `statusEffects` will be resolved to the method `getStatusEffects` on `LivingEntity`
-  - `getStatusEffects` returns `Collection<StatusEffectInstance>`, which corresponds to the field return type in our schema: `[EffectInstance!]!`
+  - `getStatusEffects` returns `Collection<StatusEffectInstance>`, which corresponds to the field's return type in our schema: `[EffectInstance!]!`
 
 > Note: extending/replacing another schema's types might be a bit janky right now
 
