@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "craftql",
+  "version": "${version}",
+
+  "name": "CraftQL",
+  "description": "Allows querying and mutating game objects through a schema-driven GraphQL API",
+  "authors": [
+    "Florens"
+  ],
+  "contact": {
+    "sources": "https://github.com/florensie/CraftQL"
+  },
+  "license": "MIT",
+  "icon": "assets/craftql/icon.png",
+
+  "environment": "server",
+  "entrypoints": {
+    "server": ["be.florens.craftql.CraftQL"]
+  },
+  "mixins": ["craftql.mixins.json"],
+
+  "depends": {
+    "minecraft": "*",
+    "fabricloader": ">=0.11.3",
+    "fabric-language-kotlin": "*",
+    "fabric": "*"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "be.florens.craftql.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "server": [
+    "FieldResolverScannerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

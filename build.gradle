@@ -1,0 +1,113 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.32'
+    id 'fabric-loom' version '0.7-SNAPSHOT'
+    id 'maven-publish'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+    mavenCentral()
+    maven { url = "https://www.cursemaven.com" }
+    maven {url = "https://jitpack.io" }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    include mappings("net.fabricmc:yarn:${project.yarn_version}:v2")
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    modImplementation "net.fabricmc:fabric-language-kotlin:1.5.0+kotlin.1.4.31"
+
+    // Dev runtime
+    modRuntime "curse.maven:lazydfu-433518:3209972"
+    modRuntime "com.github.alphaqu:DashLoader:master-SNAPSHOT"
+
+    // GraphQL
+    include implementation("com.graphql-java-kickstart:graphql-java-tools:11.0.0") // FIXME: this doesn't have 11.1.0 yet
+    include implementation("com.graphql-java-kickstart:graphql-java-servlet:${project.graphql_kickstart_version}")
+
+    // Jetty
+    include implementation("org.eclipse.jetty:jetty-webapp:${project.jetty_version}")
+    include implementation("org.eclipse.jetty:jetty-http:${project.jetty_version}")
+    include implementation("org.eclipse.jetty:jetty-annotations:${project.jetty_version}")
+    include implementation("org.eclipse.jetty.websocket:websocket-api:${project.jetty_version}")
+    include implementation("org.eclipse.jetty.websocket:websocket-server:${project.jetty_version}")
+    include implementation("org.eclipse.jetty.websocket:javax-websocket-server-impl:${project.jetty_version}")
+    include implementation("org.eclipse.jetty.websocket:websocket-common:${project.jetty_version}")
+
+    // Transitive JiJ TODO: find a better way to do this
+    // These were manually added until it didn't crash, there might still be something missing
+    include "com.fasterxml.jackson.core:jackson-core:${project.jackson_version}"
+    include "com.fasterxml.jackson.core:jackson-annotations:${project.jackson_version}"
+    include "com.fasterxml.jackson.core:jackson-databind:${project.jackson_version}"
+    include "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${project.jackson_version}"
+    include "com.fasterxml.jackson.module:jackson-module-kotlin:${project.jackson_version}"
+    include "com.fasterxml:classmate:1.5.0"
+    include "com.graphql-java:graphql-java:16.1"
+    include "com.graphql-java:java-dataloader:2.2.3"
+    include "com.graphql-java-kickstart:graphql-java-kickstart:${project.graphql_kickstart_version}"
+    include "javax.websocket:javax.websocket-api:1.1"
+    include "javax.servlet:javax.servlet-api:3.1.0"
+    include "org.eclipse.jetty:jetty-server:${project.jetty_version}"
+    include "org.eclipse.jetty:jetty-client:${project.jetty_version}"
+    include "org.eclipse.jetty:jetty-util:${project.jetty_version}"
+    include "org.eclipse.jetty:jetty-io:${project.jetty_version}"
+    include "org.eclipse.jetty:jetty-servlet:${project.jetty_version}"
+    include "org.eclipse.jetty:jetty-security:${project.jetty_version}"
+    include "org.eclipse.jetty.websocket:websocket-servlet:${project.jetty_version}"
+    include "org.eclipse.jetty.websocket:websocket-client:${project.jetty_version}"
+    include "org.eclipse.jetty.websocket:javax-websocket-client-impl:${project.jetty_version}"
+    include "org.antlr:antlr4-runtime:4.8"
+    include "org.reactivestreams:reactive-streams:1.0.2"
+    include "org.slf4j:slf4j-api:1.7.30"
+    include "org.apache.commons:commons-lang3:3.9" // FIXME: minecraft loads an older version, breaks a lot of java versions
+}
+
+processResources {
+    duplicatesStrategy(DuplicatesStrategy.WARN)
+    inputs.property "version", project.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "fabric.mod.json"
+        expand "version": project.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "fabric.mod.json"
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+
+jar {
+    from "LICENSE"
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact(remapJar) {
+                builtBy remapJar
+            }
+            artifact(sourcesJar) {
+                builtBy remapSourcesJar
+            }
+        }
+    }
+
+    repositories {
+    }
+}

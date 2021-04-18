@@ -1,0 +1,54 @@
+type Query {
+    players: [ServerPlayerEntity!]
+}
+
+type ServerPlayerEntity {
+    name: Text!
+    # ip: String! # Disabled by default for security reasons
+    blockPos: BlockPos!
+    world: World
+    inventory: PlayerInventory!
+}
+
+type BlockPos {
+    x: Int
+    y: Int
+    z: Int
+}
+
+type PlayerInventory {
+    size: Int!
+    empty: Boolean!
+    stack(slot: Int!): ItemStack!
+    stacks: [ItemStack!]!
+}
+
+type ItemStack {
+    item: Item!
+    count: Int!
+    maxCount: Int!
+    name: Text!
+    isFood: Boolean!
+    empty: Boolean!
+    enchantable: Boolean!
+}
+
+type Item {
+    maxCount: Int!
+    toString: String!
+    group: ItemGroup
+}
+
+type ItemGroup {
+    index: Int!
+    name: String
+}
+
+type World {
+    time: Int!
+    timeOfDay: Int!
+    thundering: Boolean!
+    raining: Boolean!
+}
+
+scalar Text
