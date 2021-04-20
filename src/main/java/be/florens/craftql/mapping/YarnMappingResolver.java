@@ -21,7 +21,6 @@ public class YarnMappingResolver {
     private static final String CURRENT_NAMESPACE = FabricLoader.getInstance().getMappingResolver()
             .getCurrentRuntimeNamespace();
     private static YarnMappingResolver instance;
-    private final TinyTree tinyTree;
     private final MappingResolver mappingResolver;
 
     private YarnMappingResolver() {
@@ -30,13 +29,15 @@ public class YarnMappingResolver {
                 .orElseThrow(() -> new RuntimeException("Yarn Jar-in-Jar was not loaded"))
                 .getPath("mappings/mappings.tiny");
 
+        TinyTree tinyTree;
         try {
             BufferedReader mappingsReader = Files.newBufferedReader(mappingsPath);
             tinyTree = TinyMappingFactory.loadWithDetection(mappingsReader);
         } catch (IOException e) {
-            throw new RuntimeException("Yarn mappings could not be read");
+            throw new RuntimeException("Yarn mappings could not be read", e);
         }
 
+        // Create MappingResolver
         try {
             // Get FabricMappingResolver constructor
             Class<?> clazz = Class.forName("net.fabricmc.loader.FabricMappingResolver");
@@ -44,8 +45,7 @@ public class YarnMappingResolver {
             constructor.setAccessible(true);
 
             // Create a new instance
-            mappingResolver = (net.fabricmc.loader.api.MappingResolver) constructor.newInstance(
-                    (Supplier<TinyTree>) () -> tinyTree, "named");
+            mappingResolver = (MappingResolver) constructor.newInstance((Supplier<TinyTree>) () -> tinyTree, "named");
         } catch (Exception e) {
             throw new RuntimeException("Failed to create FabricMappingResolver", e);
         }

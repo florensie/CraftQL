@@ -2,12 +2,16 @@ type Query {
     players: [ServerPlayerEntity!]
 }
 
+type Subscription {
+    onBreakBlock: ServerPlayerEntity!
+}
+
 type ServerPlayerEntity {
     name: Text!
     # ip: String! # Disabled by default for security reasons
     blockPos: BlockPos!
     world: World
-    inventory: PlayerInventory!
+    inventory: Inventory!
 }
 
 type BlockPos {
@@ -16,7 +20,7 @@ type BlockPos {
     z: Int
 }
 
-type PlayerInventory {
+type Inventory {
     size: Int!
     empty: Boolean!
     stack(slot: Int!): ItemStack!

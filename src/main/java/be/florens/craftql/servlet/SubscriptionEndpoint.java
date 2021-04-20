@@ -1,11 +1,11 @@
 package be.florens.craftql.servlet;
 
-import be.florens.craftql.CraftQL;
+import graphql.kickstart.servlet.GraphQLConfiguration;
 import graphql.kickstart.servlet.GraphQLWebsocketServlet;
 
 public class SubscriptionEndpoint extends GraphQLWebsocketServlet {
 
-    public SubscriptionEndpoint() {
-        super(CraftQL.graphQLConfig);
+    public SubscriptionEndpoint(GraphQLConfiguration config) {
+        super(config);
     }
 }

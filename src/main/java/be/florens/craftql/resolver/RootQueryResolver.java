@@ -2,9 +2,10 @@ package be.florens.craftql.resolver;
 
 import be.florens.craftql.CraftQL;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import net.minecraft.server.network.ServerPlayerEntity;
+
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.server.network.ServerPlayerEntity;
 
 public class RootQueryResolver implements GraphQLQueryResolver {
 

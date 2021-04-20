@@ -1,5 +1,7 @@
 package be.florens.craftql.servlet;
 
+import graphql.kickstart.servlet.GraphQLConfiguration;
+
 import javax.websocket.HandshakeResponse;
 import javax.websocket.server.HandshakeRequest;
 import javax.websocket.server.ServerEndpointConfig;
@@ -8,8 +10,8 @@ public class SubscriptionEndpointConfigurer extends ServerEndpointConfig.Configu
 
     private final SubscriptionEndpoint endpoint;
 
-    public SubscriptionEndpointConfigurer() {
-        endpoint = new SubscriptionEndpoint();
+    public SubscriptionEndpointConfigurer(GraphQLConfiguration config) {
+        endpoint = new SubscriptionEndpoint(config);
     }
 
     @Override
